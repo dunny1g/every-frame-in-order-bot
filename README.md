@@ -1,6 +1,6 @@
 # Every Frame In Order Twitter Bot
 
-A Python bot to post every frame of a TV show in order to Twitter with a set interval between tweets
+A Python bot to post every frame of a TV show in order to Twitter with a set interval between tweets.
 
 I would like to thank [Every SpongeBob Frame In Order](https://twitter.com/SbFramesInOrder) for the inspiration.
 
@@ -15,11 +15,11 @@ I would like to thank [Every SpongeBob Frame In Order](https://twitter.com/SbFra
 
 # How to use
 
-1. Download `main.py` and `allEPs.txt` from this repo
+1. Download `main.py` and `allEPs.txt` from this repo.
 2. Create a folder to store both of these files, this folder will then store the `frames` folder, `log.txt` and `config.json` after they have been generated.
 3. Run `main.py` once to generate `config.json` and the `frames` folder, the `frames` folder will be used to store frames from your chosen TV show. If you want to use a different name for the frames folder, you can edit the `frame_dir` variable on line 22 in `main.py`.
 
-Your bot folder should now look like this
+Your bot folder should now look like this:
 
 <img src="https://raw.githubusercontent.com/KDunny/every-frame-in-order-bot/main/Root%20folder%20structure.png"/>
 
