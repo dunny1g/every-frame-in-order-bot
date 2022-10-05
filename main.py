@@ -176,8 +176,8 @@ for j in range (currentEPnum, allEPs_lines):
                         full_tweet = "{showName} - {season_episode} - Frame {i} out of {totalFrames}".format(showName=showName, season_episode=season_episode, i=i, totalFrames=totalFrames)
                         
                         #Send tweet with uploaded image and text
-                        print("Sending Tweet with frame {i} out of {totalFrames}".format(i=i, totalFrames=totalFrames))
-                        logging.info("Sending Tweet with frame {i} out of {totalFrames}".format(i=i, totalFrames=totalFrames))
+                        print("Sending tweet with frame {i} out of {totalFrames}".format(i=i, totalFrames=totalFrames))
+                        logging.info("Sending tweet with frame {i} out of {totalFrames}".format(i=i, totalFrames=totalFrames))
                         client.create_tweet(text=full_tweet, media_ids=[media.media_id])
                         
                         #Calculate remaining frames left in episode
@@ -211,8 +211,8 @@ for j in range (currentEPnum, allEPs_lines):
                             logging.exception('Twitter API: 503 Service Unavailable on frame {currentFrame}'.format(currentFrame=currentFrame))
                             print('Twitter API: 503 Service Unavailable on frame {currentFrame}'.format(currentFrame=currentFrame))
                             
-                            #Discord webhook to inform about 503 error
-                            webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> Twitter API: 503 Service Unavailable on frame {currentFrame}'.format(userID=userID, currentFrame=currentFrame))
+                            #Discord webhook to inform about 503 error, intentionally doesn't tag user as it happens multiple times a day for me
+                            webhook = DiscordWebhook(url=webhookURL, content='Twitter API: 503 Service Unavailable on frame {currentFrame}'.format(currentFrame=currentFrame))
                             response = webhook.execute()
                             
                             #Continuation of after frame posting cycle
@@ -244,8 +244,8 @@ for j in range (currentEPnum, allEPs_lines):
                             sleep(tweetDelay)
                             
                             #Restart script after 503 error
-                            print("Restarting bot...")
-                            logging.info("Restarting bot...")
+                            print("Restarting bot to resolve Twitter API: 503 error...")
+                            logging.info("Restarting bot to resolve Twitter API: 503 error...")
                             os.execv(sys.executable, ['python3'] + sys.argv)
                         #Store traceback exception and print to console and log
                         print_error()
