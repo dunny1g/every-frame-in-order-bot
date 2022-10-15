@@ -194,7 +194,11 @@ for j in range (currentEPnum, allEPs_lines):
                         
                         #Tweet text
                         if enableEPname == 1:
-                            full_tweet = '{showName} - {season_episode} "{EPname}" - Frame {i} out of {totalFrames}'.format(showName=showName, season_episode=season_episode, EPname=EPname, i=i, totalFrames=totalFrames)
+                            # If EPname is enabled but blank, likely due to misconfiguration, tweet won't contain empty quotation marks and will look the same as if EPname was disabled
+                            if EPname == "":
+                                full_tweet = '{showName} - {season_episode} - Frame {i} out of {totalFrames}'.format(showName=showName, season_episode=season_episode, i=i, totalFrames=totalFrames)
+                            else:
+                                full_tweet = '{showName} - {season_episode} "{EPname}" - Frame {i} out of {totalFrames}'.format(showName=showName, season_episode=season_episode, EPname=EPname, i=i, totalFrames=totalFrames)
                         else:
                             full_tweet = '{showName} - {season_episode} - Frame {i} out of {totalFrames}'.format(showName=showName, season_episode=season_episode, i=i, totalFrames=totalFrames)
                         
