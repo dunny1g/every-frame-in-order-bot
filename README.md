@@ -28,6 +28,12 @@ Your bot folder should now look like this:
 6. Extract frames from your chosen TV show with [ffmpeg](https://ffmpeg.org/) and store them inside your `frames` folder, each season with a dedicated folder and each episode with a dedicated folder inside its associated season folder, in your ffmpeg command ensure the file output is `frame-%d.jpg`, this will extract frames in order named as `frame-1.jpg`,`frame-2.jpg`, etc. After extraction, your frames should be stored like this example `frames/Season 1/Episode 1/frame-1.jpg`.
 7. Finally you can run `main.py` and the bot should start posting frames to your Twitter!
 
+# Optional - Include episode names in tweets
+
+1. Download `EPnames.txt` from this repo into the bot's folder.
+2. Edit `EPnames.txt` so it contains each episode's name on the same line number that episode appears in `allEPs.txt`. Just like `allEPs.txt` ensure there is an additional line at the end of the file with any text inside it.
+3. Edit `config.json` by changing `enableEPname` from `0` to `1`.
+
 # Accounts running this bot
 Please contact me through the [@SPFramesInOrder](https://twitter.com/SPFramesInOrder) Twitter DM's if you are using this script for your Twitter bot, I would love to add your account to this list!
 

@@ -35,8 +35,9 @@ config_data = {
     'access_token': 'YOUR_TWITTER_ACCESS_TOKEN_HERE',  # Twitter API Access Token
     'access_secret': 'YOUR_TWITTER_ACCESS_SECRET_HERE',  # Twitter API Access Secret
     'webhookURL': 'YOUR_DISCORD_WEBHOOK_URL_HERE', # Discord Webhook URL for alerts
-    'userID': 'YOUR_DISCORD_USER_ID_HERE', # Discord user ID so the bot knows who to tag, read README on GitHub to find your ID
+    'userID': 'YOUR_DISCORD_USER_ID_HERE', # Discord user ID so the bot knows who to tag, read GitHub README to find your ID
     'showName': 'NAME OF TV SHOW HERE', # Name of TV Show for use in tweet text
+    'enableEPname': '0', # Includes episode name in frame tweets if enabled, read GitHub README for more info
     'tweetDelay': '180', # Number of seconds between each tweet
     'currentEPnum': '1', # Current episode number, will be updated by bot
     'currentEP': '', # Current season and episode in plain text, will be updated by bot
@@ -61,7 +62,7 @@ def load_config():
             sys.exit(1)
 
     #Check file for if any fields are missing, if so add malformed flag
-    if any(item not in config_data for item in ['api_key', 'api_secret', 'access_token', 'access_secret', 'webhookURL', 'userID', 'showName', 'tweetDelay', 'currentEPnum', 'currentEP', 'currentFrame']):
+    if any(item not in config_data for item in ['api_key', 'api_secret', 'access_token', 'access_secret', 'webhookURL', 'userID', 'showName', 'enableEPname', 'tweetDelay', 'currentEPnum', 'currentEP', 'currentFrame']):
         config_data['malformed'] = True
 
 load_config()
@@ -86,14 +87,21 @@ showName = config_data['showName']
 print("TV Show:", showName)
 logging.info("TV Show: {showName}".format(showName=showName))
 
+#Episode name in tweets
+enableEPname = int(config_data['enableEPname'])
+
 #Number of seconds between tweets
 tweetDelay = int(config_data['tweetDelay'])
 
 #Store number of all episodes, current episode and then place in season_slash_episode which can be used to pull the current Season and Episode
+#Also used to find episode name
 filer1 = open("{dir}/allEPs.txt".format(dir=dir),"r")
 allEPs = filer1.readlines()
 allEPs_lines = len(allEPs)
 filer1.close()
+if enableEPname == 1:
+    filer2 = open("{dir}/EPnames.txt".format(dir=dir),"r")
+    EPnamer = filer2.readlines()
 currentEPnum = int(config_data['currentEPnum'])
 totalEPs = allEPs_lines - 1
 print("Total episodes:", totalEPs)
@@ -133,19 +141,31 @@ def send_discord_webhook():
 for j in range (currentEPnum, allEPs_lines):
     while True:
         try:
-            #Writes season_episode for use in tweet text
+            #Writes season_episode and EPname for use in tweet text
             temp_season_slash_episode = allEPs[currentEPnum-1]
             season_slash_episode = temp_season_slash_episode.replace("\n", "")
             season_episode = season_slash_episode.replace("/", " ")
-            print("Current episode: {currentEPnum} - {season_episode}".format(currentEPnum=currentEPnum, season_episode=season_episode))
-            logging.info("Current episode: {currentEPnum} - {season_episode}".format(currentEPnum=currentEPnum, season_episode=season_episode))
-    
+            if enableEPname == 1:
+                tempEPname = EPnamer[currentEPnum-1]
+                EPname = tempEPname.replace("\n", "")
+                print('Current episode: {currentEPnum} - {season_episode} "{EPname}"'.format(currentEPnum=currentEPnum, season_episode=season_episode, EPname=EPname))
+                logging.info('Current episode: {currentEPnum} - {season_episode} "{EPname}"'.format(currentEPnum=currentEPnum, season_episode=season_episode, EPname=EPname))
+            else:
+                print('Current episode: {currentEPnum} - {season_episode}'.format(currentEPnum=currentEPnum, season_episode=season_episode))
+                logging.info('Current episode: {currentEPnum} - {season_episode}'.format(currentEPnum=currentEPnum, season_episode=season_episode))
+            
             #Next episode variable
             temp_nextEP = allEPs[currentEPnum]
             nextEP_slash = temp_nextEP.replace("\n", "")
             nextEP = nextEP_slash.replace("/", " ")
-            print("Next episode: {nextEP}".format(nextEP=nextEP))
-            logging.info("Next episode: {nextEP}".format(nextEP=nextEP))
+            if enableEPname == 1:
+                temp_nextEPname = EPnamer[currentEPnum]
+                nextEPname = temp_nextEPname.replace("\n", "")
+                print('Next episode: {nextEP} "{nextEPname}"'.format(nextEP=nextEP, nextEPname=nextEPname))
+                logging.info('Next episode: {nextEP} "{nextEPname}"'.format(nextEP=nextEP, nextEPname=nextEPname))
+            else:
+                print('Next episode: {nextEP}'.format(nextEP=nextEP))
+                logging.info('Next episode: {nextEP}'.format(nextEP=nextEP))
     
             #Counts number of frames in folder and store it in a variable
             frame_path = "{dir}/{frame_dir}/{season_slash_episode}".format(dir=dir, frame_dir=frame_dir, season_slash_episode=season_slash_episode)
@@ -173,7 +193,10 @@ for j in range (currentEPnum, allEPs_lines):
                         sleep(1)
                         
                         #Tweet text
-                        full_tweet = "{showName} - {season_episode} - Frame {i} out of {totalFrames}".format(showName=showName, season_episode=season_episode, i=i, totalFrames=totalFrames)
+                        if enableEPname == 1:
+                            full_tweet = '{showName} - {season_episode} "{EPname}" - Frame {i} out of {totalFrames}'.format(showName=showName, season_episode=season_episode, EPname=EPname, i=i, totalFrames=totalFrames)
+                        else:
+                            full_tweet = '{showName} - {season_episode} - Frame {i} out of {totalFrames}'.format(showName=showName, season_episode=season_episode, i=i, totalFrames=totalFrames)
                         
                         #Send tweet with uploaded image and text
                         print("Sending tweet with frame {i} out of {totalFrames}".format(i=i, totalFrames=totalFrames))
@@ -198,8 +221,12 @@ for j in range (currentEPnum, allEPs_lines):
                         if remainingFrames == 0:
                             print("The bot has reached the end of {season_episode}".format(season_episode=season_episode))
                             logging.info("The bot has reached the end of {season_episode}".format(season_episode=season_episode))
-                            webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> The bot has reached the end of {season_episode}. Next episode: {nextEP}'.format(userID=userID, season_episode=season_episode, nextEP=nextEP))
-                            response = webhook.execute()
+                            if enableEPname == 1:
+                                webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> The bot has reached the end of {season_episode}. Next episode: {nextEP} "{nextEPname}"'.format(userID=userID, season_episode=season_episode, nextEP=nextEP, nextEPname=nextEPname))
+                                response = webhook.execute()
+                            else:
+                                webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> The bot has reached the end of {season_episode}. Next episode: {nextEP}'.format(userID=userID, season_episode=season_episode, nextEP=nextEP))
+                                response = webhook.execute()
                         
                         #Sleep for specified time before posting next frame
                         sleep(tweetDelay)
@@ -235,8 +262,12 @@ for j in range (currentEPnum, allEPs_lines):
                                 print("The bot has reached the end of {season_episode}".format(season_episode=season_episode))
                                 logging.info("The bot has reached the end of {season_episode}".format(season_episode=season_episode))
                                 sleep(2)
-                                webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> The bot has reached the end of {season_episode}. Next episode: {nextEP}. This occurred during a Twitter API 503 error'.format(userID=userID, season_episode=season_episode, nextEP=nextEP))
-                                response = webhook.execute()
+                                if enableEPname == 1:
+                                    webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> The bot has reached the end of {season_episode}. Next episode: {nextEP} "{nextEPname}". This occurred during a Twitter API 503 error'.format(userID=userID, season_episode=season_episode, nextEP=nextEP, nextEPname=nextEPname))
+                                    response = webhook.execute()
+                                else:
+                                    webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> The bot has reached the end of {season_episode}. Next episode: {nextEP}. This occurred during a Twitter API 503 error'.format(userID=userID, season_episode=season_episode, nextEP=nextEP))
+                                    response = webhook.execute()
                                 sleep(tweetDelay)
                                 continue
                             
