@@ -1,6 +1,6 @@
 from time import sleep
 from datetime import timedelta
-import socket
+import requests
 import os
 import sys
 import logging
@@ -292,15 +292,15 @@ for j in range (currentEPnum, allEPs_lines):
                         sleep(tweetDelay)
                         continue
                     #Connection lost handling
-                    except socket.gaierror:
+                    except requests.exceptions.ConnectionError:
                         #Store traceback exception and print to console and log
                         print_error()
                         
                         #Sleep for specified time before retrying
-                        sleep(tweetDelay)
+                        sleep(540)
                         
                         #Discord webhook to inform about error, will fail if connection is still down which is why we run this after the sleep period
-                        webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> socket.gaierror exception has occurred with the Twitter bot and it might have stopped posting! Current frame: {currentFrame}'.format(userID=userID, currentFrame=currentFrame))
+                        webhook = DiscordWebhook(url=webhookURL, content='<@{userID}> requests.exceptions exception has occurred with the Twitter bot and it might have stopped posting! Current frame: {currentFrame}'.format(userID=userID, currentFrame=currentFrame))
                         response = webhook.execute()
                         continue
                     #General error handling
