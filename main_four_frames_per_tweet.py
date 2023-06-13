@@ -38,7 +38,7 @@ config_data = {
     'userID': 'YOUR_DISCORD_USER_ID_HERE', # Discord user ID so the bot knows who to tag, read GitHub README to find your ID
     'showName': 'NAME OF TV SHOW HERE', # Name of TV Show for use in tweet text
     'enableEPname': '0', # Includes episode name in frame tweets if enabled, read GitHub README for more info
-    'tweetDelay': '180', # Number of seconds between each tweet
+    'tweetDelay': '1800', # Number of seconds between each tweet
     'currentEPnum': '1', # Current episode number, will be updated by bot
     'currentEP': '', # Current season and episode in plain text, will be updated by bot
     'currentFrame': '1', # Current frame, will be updated by bot
