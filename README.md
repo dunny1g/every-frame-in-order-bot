@@ -15,7 +15,7 @@ I would like to thank [Every SpongeBob Frame In Order](https://twitter.com/SbFra
 
 # How to use
 
-1. Download `main.py` and `allEPs.txt` from this repo.
+1. Download `main.py` or `main_four_frames_per_tweet.py` and `allEPs.txt` from this repo.
 2. Create a folder to store both of these files, this folder will then store the `frames` folder, `log.txt` and `config.json` after they have been generated.
 3. Run `main.py` once to generate `config.json` and the `frames` folder, the `frames` folder will be used to store frames from your chosen TV show. If you want to use a different name for the frames folder, you can edit the `frame_dir` variable on line 22 in `main.py`.
 
@@ -33,6 +33,11 @@ Your bot folder should now look like this:
 1. Download `EPnames.txt` from this repo into the bot's folder.
 2. Edit `EPnames.txt` so it contains each episode's name on the same line number that episode appears in `allEPs.txt`. Just like `allEPs.txt` ensure there is an additional line at the end of the file with any text inside it.
 3. Edit `config.json` by changing `enableEPname` from `0` to `1`.
+
+# Twitter API Changes
+
+With the recent Twitter API changes, I've uploaded a new `main_four_frames_per_tweet.py` script which tweets four frames in one tweet at a default time interval of every 30 minutes instead of the original script's one frame per tweet at a default time interval of every 3 minutes. While this is not a perfect solution, this should just stay inside the 1500 tweets per month limit for a free API account so I wouldn't recommend changing this in the config. I will keep both versions of the script on this repo for both free and paid API users to use.  
+Just to reiterate: **Free API Users Use `main_four_frames_per_tweet.py`** | **Paid API Users Use `main.py`**
 
 # Accounts running this bot
 Please contact me through the [@SPFramesInOrder](https://twitter.com/SPFramesInOrder) Twitter DM's if you are using this script for your Twitter bot, I would love to add your account to this list!
