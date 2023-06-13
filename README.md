@@ -36,7 +36,7 @@ Your bot folder should now look like this:
 
 # Twitter API Changes
 
-With the recent Twitter API changes, I've uploaded a new `main_four_frames_per_tweet.py` script which tweets four frames in one tweet at a default time interval of every 30 minutes instead of the original script's one frame per tweet at a default time interval of every 3 minutes. While this is not a perfect solution, this should just stay inside the 1500 tweets per month limit for a free API account so I wouldn't recommend changing this in the config. I will keep both versions of the script on this repo for both free and paid API users to use.  
+With the recent Twitter API changes, I've uploaded a new `main_four_frames_per_tweet.py` script which uploads four frames in one tweet at a default time interval of every 30 minutes instead of the original script's one frame per tweet at a default time interval of every 3 minutes. While this is not a perfect solution, this should just stay inside the 1500 tweets per month limit for a free API account so I wouldn't recommend changing this in the config. I will keep both versions of the script on this repo for both free and paid API users to use.  
 Just to reiterate: **Free API Users Use `main_four_frames_per_tweet.py`** | **Paid API Users Use `main.py`**
 
 # Accounts running this bot
